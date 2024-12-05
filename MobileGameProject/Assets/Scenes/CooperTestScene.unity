@@ -152,11 +152,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 586837121222467902, guid: 89b5d0d3bd91dd948bf662888a447888, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 586837121222467902, guid: 89b5d0d3bd91dd948bf662888a447888, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 500
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 586837121222467902, guid: 89b5d0d3bd91dd948bf662888a447888, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -254,13 +254,17 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1723323331, guid: 3dd731f3775479f48a1233a6b2c40195, type: 3}
+    - target: {fileID: 5953373277753390040, guid: 89b5d0d3bd91dd948bf662888a447888, type: 3}
+      propertyPath: m_MovementRange
+      value: 110
+      objectReference: {fileID: 0}
     - target: {fileID: 6733757152490458933, guid: 89b5d0d3bd91dd948bf662888a447888, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 6733757152490458933, guid: 89b5d0d3bd91dd948bf662888a447888, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 500
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 6733757152490458933, guid: 89b5d0d3bd91dd948bf662888a447888, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -559,7 +563,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 300, y: -960}
-  m_SizeDelta: {x: 350, y: 350}
+  m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &745448684
 MonoBehaviour:
@@ -1349,7 +1353,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
