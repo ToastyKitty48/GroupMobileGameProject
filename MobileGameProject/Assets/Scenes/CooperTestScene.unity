@@ -1673,7 +1673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   jumpForce: 10
-  shimmySpeed: 3
+  shimmySpeed: 0.1
   moveActionReference: {fileID: -3995060509097026242, guid: bba70746273c49e448cbb9ba6c7fea52, type: 3}
   groundCheckPoint: {fileID: 580350750}
   groundCheckRadius: 0.2
@@ -1711,8 +1711,8 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &1702534019
 CapsuleCollider2D:

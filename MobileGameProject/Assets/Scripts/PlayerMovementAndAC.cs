@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,17 +24,18 @@ public class PlayerMovementAndAC : MonoBehaviour
     float jumpHoldTimer; //Time jump bool will be true after press
     private Rigidbody2D rb; // Reference to the Rigidbody2D component
     private bool isGrounded; // To check if the player is grounded
-    private bool isOnBar = false; // To check if the player is on a shimmy bar
+    private bool isOnBar; // To check if the player is on a shimmy bar
     private float playerGrav; //The players RB gravity scale
     public Transform rightCheckPointPos; //Position of right point for shimmy bar (assinged by "ShimmyBarCode" script)
     public Transform leftCheckPointPos; //Position of left point for shimmy bar (assinged by "ShimmyBarCode" script)
+    bool ran = false; //Bool to check if shimmy position code has ran yet
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>(); // Initialize the Rigidbody2D component
+        rb = GetComponent<Rigidbody2D>();
         playerGrav = rb.gravityScale; // Stores player gravity scale for later use
     }
 
-    void Update()
+    void FixedUpdate()
     {
         // Check if the player is grounded
         isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
@@ -44,9 +46,11 @@ public class PlayerMovementAndAC : MonoBehaviour
         // Handle horizontal movement
         if (!isOnBar)
         {
-            Debug.Log("Not on bar");
+            //Debug.Log("Not on bar");
             float moveInput = moveActionReference.action.ReadValue<Vector2>().x;
             rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
+            ran = false;
+            //Restores gravity to original state after bar is let go of
             rb.gravityScale = playerGrav;
         }
 
@@ -55,28 +59,37 @@ public class PlayerMovementAndAC : MonoBehaviour
         {
             Vector3 rightPoint;
             Vector3 leftPoint;
-            bool ran = false;
+            leftPoint = new Vector3(0, 0, 0);
+            rightPoint = new Vector3(0, 0, 0);
+            float handPos = handCheckPoint.localPosition.y;
             float moveInput = moveActionReference.action.ReadValue<Vector2>().x;
             if (!ran)
             {
-                float handPos = handCheckPoint.position.y;
                 float right = rightCheckPointPos.position.y;
                 float left = leftCheckPointPos.position.y;
-                rightPoint = (new Vector3(rightCheckPointPos.position.x, rightCheckPointPos.position.y - handPos, rightCheckPointPos.position.z));
-                leftPoint = (new Vector3(leftCheckPointPos.position.x, leftCheckPointPos.position.y - handPos, leftCheckPointPos.position.z));
+                transform.position = new Vector3(transform.position.x, left - handPos, transform.position.z);
+                rightPoint = (new Vector3(rightCheckPointPos.position.x, right - handPos, rightCheckPointPos.position.z));
+                leftPoint = (new Vector3(leftCheckPointPos.position.x, left - handPos, leftCheckPointPos.position.z));
+                ran = true;
+                Debug.Log("ran bar position code");
+                Debug.Log(leftPoint);
+                Debug.Log(transform.position);
+                //Stops movement of player and turns off gravity
+                rb.velocity = new Vector2(0, 0);
+                rb.gravityScale = 0;
             }
             if (moveInput > 0)
             {
-                transform.position = Vector3.MoveTowards(transform.position, rightPoint, shimmySpeed * Time.deltaTime);
+                //Vector3 playerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, rightPoint, shimmySpeed);
             }
             if (moveInput < 0)
             {
-                transform.position = Vector3.MoveTowards(transform.position, leftPoint, shimmySpeed * Time.deltaTime);
+                //Vector3 playerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+                transform.position = Vector3.MoveTowards(transform.position, leftPoint, shimmySpeed);
             }
             
-            rb.velocity = new Vector2(rb.velocity.x, 0);
-            rb.gravityScale = 0;
-            Debug.Log("On bar");
+            //Debug.Log("On bar");
         }
 
         // Handle jumping
