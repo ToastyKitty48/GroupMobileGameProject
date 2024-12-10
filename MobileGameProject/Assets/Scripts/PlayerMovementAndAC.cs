@@ -24,11 +24,16 @@ public class PlayerMovementAndAC : MonoBehaviour
     float jumpHoldTimer; //Time jump bool will be true after press
     private Rigidbody2D rb; // Reference to the Rigidbody2D component
     private bool isGrounded; // To check if the player is grounded
-    private bool isOnBar; // To check if the player is on a shimmy bar
+    private bool touchingBar; // To check if the player is on a shimmy bar
     private float playerGrav; //The players RB gravity scale
     public Transform rightCheckPointPos; //Position of right point for shimmy bar (assinged by "ShimmyBarCode" script)
     public Transform leftCheckPointPos; //Position of left point for shimmy bar (assinged by "ShimmyBarCode" script)
     bool ran = false; //Bool to check if shimmy position code has ran yet
+    Vector3 rightPoint; //Points for shimmy bar
+    Vector3 leftPoint;
+    float barGrabIFrames;
+    bool isOnBar = false;
+    bool barJump = false;
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -41,55 +46,49 @@ public class PlayerMovementAndAC : MonoBehaviour
         isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
 
         //Check if player hand collided with shimmy bar
-        isOnBar = Physics2D.OverlapCircle(handCheckPoint.position, handCheckRadius, shimmyLayer);
-
+        touchingBar = Physics2D.OverlapCircle(handCheckPoint.position, handCheckRadius, shimmyLayer);
+        barGrabIFrames -= Time.deltaTime;
         // Handle horizontal movement
         if (!isOnBar)
         {
-            //Debug.Log("Not on bar");
             float moveInput = moveActionReference.action.ReadValue<Vector2>().x;
             rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
             ran = false;
             //Restores gravity to original state after bar is let go of
             rb.gravityScale = playerGrav;
         }
-
         // Handles shimmying
-        if (isOnBar)
+        if (isOnBar && barGrabIFrames > 0)
         {
-            Vector3 rightPoint;
-            Vector3 leftPoint;
-            leftPoint = new Vector3(0, 0, 0);
-            rightPoint = new Vector3(0, 0, 0);
+            isOnBar = false;
+        }
+        if (touchingBar && barGrabIFrames <= 0)
+        {
             float handPos = handCheckPoint.localPosition.y;
             float moveInput = moveActionReference.action.ReadValue<Vector2>().x;
             if (!ran)
             {
+                //Calculates the position of of bar an shimmy points;
                 float right = rightCheckPointPos.position.y;
                 float left = leftCheckPointPos.position.y;
                 transform.position = new Vector3(transform.position.x, left - handPos, transform.position.z);
                 rightPoint = (new Vector3(rightCheckPointPos.position.x, right - handPos, rightCheckPointPos.position.z));
                 leftPoint = (new Vector3(leftCheckPointPos.position.x, left - handPos, leftCheckPointPos.position.z));
                 ran = true;
-                Debug.Log("ran bar position code");
-                Debug.Log(leftPoint);
-                Debug.Log(transform.position);
                 //Stops movement of player and turns off gravity
                 rb.velocity = new Vector2(0, 0);
                 rb.gravityScale = 0;
+                isOnBar = true;
             }
+            //Moves player towards shimmy points
             if (moveInput > 0)
             {
-                //Vector3 playerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                 transform.position = Vector3.MoveTowards(transform.position, rightPoint, shimmySpeed);
             }
             if (moveInput < 0)
             {
-                //Vector3 playerPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
                 transform.position = Vector3.MoveTowards(transform.position, leftPoint, shimmySpeed);
             }
-            
-            //Debug.Log("On bar");
         }
 
         // Handle jumping
@@ -101,15 +100,21 @@ public class PlayerMovementAndAC : MonoBehaviour
                 jumpHold = false;
             }
         }
-        if (isGrounded && jumpHold)
+        if (isGrounded && jumpHold || jumpHold && barJump)
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            barJump = false;
         }
     }
     public void Jump()
     {
         jumpHold = true;
         jumpHoldTimer = 0.2f;
+        if (isOnBar)
+        {
+            barGrabIFrames = 1f;
+            barJump = true;
+        }
     }
 
     void OnDrawGizmos()
