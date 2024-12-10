@@ -8,6 +8,7 @@ public class PlayerMovementAndAC : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f; // Speed for horizontal movement when walking
     [SerializeField] private float jumpForce = 10f; // Force applied when jumping
     [SerializeField] private float shimmySpeed = 3f; //Speed for horizontal movement on shimmy bar
+    [SerializeField] private float fallGravMulti = 3f;
     [SerializeField] InputActionReference moveActionReference;
 
     [Header("Ground Check")]
@@ -29,11 +30,13 @@ public class PlayerMovementAndAC : MonoBehaviour
     public Transform rightCheckPointPos; //Position of right point for shimmy bar (assinged by "ShimmyBarCode" script)
     public Transform leftCheckPointPos; //Position of left point for shimmy bar (assinged by "ShimmyBarCode" script)
     bool ran = false; //Bool to check if shimmy position code has ran yet
+    bool ran1 = false; //Bool for player fall gravity miltiplyer
     Vector3 rightPoint; //Points for shimmy bar
     Vector3 leftPoint;
-    float barGrabIFrames;
-    bool isOnBar = false;
-    bool barJump = false;
+    float barGrabIFrames; //Grants IFrames when jumping off a bar so the player does not get snapped back to the same bar the instance you jump
+    bool isOnBar = false; //If player is on a shimmy bar
+    bool barJump = false; //If the player made a jump wile holding a shimmy bar
+    bool holdingJumpButton = false; //If player is holding jump button
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -48,14 +51,23 @@ public class PlayerMovementAndAC : MonoBehaviour
         //Check if player hand collided with shimmy bar
         touchingBar = Physics2D.OverlapCircle(handCheckPoint.position, handCheckRadius, shimmyLayer);
         barGrabIFrames -= Time.deltaTime;
-        // Handle horizontal movement
+        // Handle horizontal movement & Exta fall gravity
         if (!isOnBar)
         {
+            //Extra fall speed for more controled jumping
+            if (!holdingJumpButton && !ran1)
+            {
+                rb.gravityScale = (playerGrav * fallGravMulti);
+                ran1 = true;
+            }
+            else if (isGrounded || holdingJumpButton)
+            {
+                //Restores gravity to original state
+                rb.gravityScale = playerGrav;
+            }
             float moveInput = moveActionReference.action.ReadValue<Vector2>().x;
             rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
             ran = false;
-            //Restores gravity to original state after bar is let go of
-            rb.gravityScale = playerGrav;
         }
         // Handles shimmying
         if (isOnBar && barGrabIFrames > 0)
@@ -81,13 +93,20 @@ public class PlayerMovementAndAC : MonoBehaviour
                 isOnBar = true;
             }
             //Moves player towards shimmy points
-            if (moveInput > 0)
+            if (moveInput > 0.5)
             {
                 transform.position = Vector3.MoveTowards(transform.position, rightPoint, shimmySpeed);
             }
-            if (moveInput < 0)
+            if (moveInput < -0.5)
             {
                 transform.position = Vector3.MoveTowards(transform.position, leftPoint, shimmySpeed);
+            }
+            //Handles kicking player off of shimmy bar if joystick is moved down
+            if (moveActionReference.action.ReadValue<Vector2>().y < -0.8)
+            {
+                barGrabIFrames = 0.5f;
+                Debug.Log(barGrabIFrames);
+                Debug.Log("I AM RUNNING WOOO");
             }
         }
 
@@ -110,11 +129,17 @@ public class PlayerMovementAndAC : MonoBehaviour
     {
         jumpHold = true;
         jumpHoldTimer = 0.2f;
+        holdingJumpButton = true;
         if (isOnBar)
         {
-            barGrabIFrames = 1f;
+            barGrabIFrames = 0.1f;
             barJump = true;
         }
+    }
+    public void LetGoOfJump()
+    {
+        holdingJumpButton = false;
+        ran1 = false;
     }
 
     void OnDrawGizmos()
