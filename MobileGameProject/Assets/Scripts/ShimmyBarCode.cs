@@ -23,11 +23,6 @@ public class ShimmyBarCode : MonoBehaviour
             PlayerMovementAndAC playerMove = collision.gameObject.GetComponent<PlayerMovementAndAC>();
             playerMove.leftCheckPointPos = leftCheckPoint;
             playerMove.rightCheckPointPos = rightCheckPoint;
-            Debug.Log("Grabbed bar");
         }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        Debug.Log("Let go of bar");
     }
 }

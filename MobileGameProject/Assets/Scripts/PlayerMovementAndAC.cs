@@ -5,10 +5,10 @@ using UnityEngine.InputSystem;
 public class PlayerMovementAndAC : MonoBehaviour
 {
     [Header("Player Settings")]
-    [SerializeField] private float moveSpeed = 5f; // Speed for horizontal movement when walking
+    [SerializeField] private float moveSpeed = 6f; // Speed for horizontal movement when walking
     [SerializeField] private float jumpForce = 10f; // Force applied when jumping
-    [SerializeField] private float shimmySpeed = 3f; //Speed for horizontal movement on shimmy bar
-    [SerializeField] private float fallGravMulti = 3f;
+    [SerializeField] private float shimmySpeed = 0.04f; //Speed for horizontal movement on shimmy bar
+    [SerializeField] private float fallGravMulti = 2f;
     [SerializeField] InputActionReference moveActionReference;
 
     [Header("Ground Check")]
@@ -16,7 +16,7 @@ public class PlayerMovementAndAC : MonoBehaviour
     [SerializeField] private float groundCheckRadius = 0.2f; // Radius for ground check
     [SerializeField] private LayerMask groundLayer; // Layer mask for detecting ground
 
-    [Header("Shimmy Check")]
+    [Header("Shimmy Settings")]
     [SerializeField] private Transform handCheckPoint; // Transform for hand check position
     [SerializeField] private float handCheckRadius = 0.2f; // Radius for ground check
     [SerializeField] private LayerMask shimmyLayer; // Layer mask for detecting shimmy points
@@ -73,6 +73,7 @@ public class PlayerMovementAndAC : MonoBehaviour
         if (isOnBar && barGrabIFrames > 0)
         {
             isOnBar = false;
+            Debug.Log("Let go of bar");
         }
         if (touchingBar && barGrabIFrames <= 0)
         {
@@ -91,6 +92,7 @@ public class PlayerMovementAndAC : MonoBehaviour
                 rb.velocity = new Vector2(0, 0);
                 rb.gravityScale = 0;
                 isOnBar = true;
+                Debug.Log("Grabbed bar");
             }
             //Moves player towards shimmy points
             if (moveInput > 0.5)
@@ -104,9 +106,9 @@ public class PlayerMovementAndAC : MonoBehaviour
             //Handles kicking player off of shimmy bar if joystick is moved down
             if (moveActionReference.action.ReadValue<Vector2>().y < -0.8)
             {
-                barGrabIFrames = 0.5f;
-                Debug.Log(barGrabIFrames);
-                Debug.Log("I AM RUNNING WOOO");
+                ran1 = false;
+                barGrabIFrames = 0.2f;
+                Debug.Log("Player droped off bar");
             }
         }
 
