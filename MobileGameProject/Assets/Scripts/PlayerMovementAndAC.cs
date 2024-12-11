@@ -37,10 +37,18 @@ public class PlayerMovementAndAC : MonoBehaviour
     bool isOnBar = false; //If player is on a shimmy bar
     bool barJump = false; //If the player made a jump wile holding a shimmy bar
     bool holdingJumpButton = false; //If player is holding jump button
+    Animator anim; //for player animator controller
+    Vector3 lastPosition; //for player animation functionalty
+    SpriteRenderer Spr; //for player animation functionalty
+
+    //everything that is used for the player animation will be marked with "for player animation functionalty"
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerGrav = rb.gravityScale; // Stores player gravity scale for later use
+        anim = GetComponent<Animator>(); //for player animation functionalty
+        lastPosition = transform.position; //for player animation functionalty
+        Spr = GetComponent<SpriteRenderer>();
     }
 
     void FixedUpdate()
@@ -51,6 +59,44 @@ public class PlayerMovementAndAC : MonoBehaviour
         //Check if player hand collided with shimmy bar
         touchingBar = Physics2D.OverlapCircle(handCheckPoint.position, handCheckRadius, shimmyLayer);
         barGrabIFrames -= Time.deltaTime;
+        //for player animation functionalty
+        if (rb.velocity.x < -0.1)
+        {
+            Spr.flipX = true;
+        }
+        if (rb.velocity.x > 0.1)
+        {
+            Spr.flipX = false;
+        }
+        if (rb.velocity.x >= 0.1 || rb.velocity.x <= -0.1)
+        {
+            anim.SetBool("IsMoving", true);
+        }else
+        {
+            anim.SetBool("IsMoving", false);
+        }
+        if (rb.velocity.y >= 0.1 || rb.velocity.y <= -0.1)
+        {
+            anim.SetBool("IsMovingY", true);
+        }
+        else
+        {
+            anim.SetBool("IsMovingY", false);
+        }
+        if (isGrounded)
+        {
+            anim.SetBool("IsOnGround", true);
+        }else
+        {
+            anim.SetBool("IsOnGround", false);
+        }
+        if (isOnBar)
+        {
+            anim.SetBool("IsOnBar", true);
+        } else
+        {
+            anim.SetBool("IsOnBar", false);
+        }
         // Handle horizontal movement & Exta fall gravity
         if (!isOnBar)
         {
@@ -74,14 +120,16 @@ public class PlayerMovementAndAC : MonoBehaviour
         {
             isOnBar = false;
             Debug.Log("Let go of bar");
+            anim.SetTrigger("LetGoOfBar");
         }
         if (touchingBar && barGrabIFrames <= 0)
         {
+
             float handPos = handCheckPoint.localPosition.y;
             float moveInput = moveActionReference.action.ReadValue<Vector2>().x;
             if (!ran)
             {
-                //Calculates the position of of bar an shimmy points;
+                //Calculates the position of of bar and shimmy points;
                 float right = rightCheckPointPos.position.y;
                 float left = leftCheckPointPos.position.y;
                 transform.position = new Vector3(transform.position.x, left - handPos, transform.position.z);
@@ -103,12 +151,19 @@ public class PlayerMovementAndAC : MonoBehaviour
             {
                 transform.position = Vector3.MoveTowards(transform.position, leftPoint, shimmySpeed);
             }
+            //for player animation functionalty
+            if (lastPosition != transform.position)
+            {
+                anim.SetBool("IsMoving", true);
+                lastPosition = transform.position;
+            }
             //Handles kicking player off of shimmy bar if joystick is moved down
             if (moveActionReference.action.ReadValue<Vector2>().y < -0.8)
             {
                 ran1 = false;
                 barGrabIFrames = 0.2f;
                 Debug.Log("Player droped off bar");
+                anim.SetTrigger("LetGoOfBar"); //for player animation functionalty
             }
         }
 
@@ -125,6 +180,7 @@ public class PlayerMovementAndAC : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             barJump = false;
+            anim.SetTrigger("Jump"); //for player animation functionalty
         }
     }
     public void Jump()

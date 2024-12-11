@@ -18,7 +18,7 @@ public class ShimmyBarCode : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "PlayerHand")
         {
             PlayerMovementAndAC playerMove = collision.gameObject.GetComponent<PlayerMovementAndAC>();
             playerMove.leftCheckPointPos = leftCheckPoint;
