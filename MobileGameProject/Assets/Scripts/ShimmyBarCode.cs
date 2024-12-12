@@ -4,20 +4,12 @@ using UnityEngine;
 
 public class ShimmyBarCode : MonoBehaviour
 {
-    [SerializeField] public Transform leftCheckPoint; // Transform for ground check position
-    [SerializeField] public Transform rightCheckPoint; // Transform for ground check position
+    [SerializeField] public Transform leftCheckPoint; // Transforms for shimmy bar L & R points
+    [SerializeField] public Transform rightCheckPoint;
     [SerializeField] private float pointRadi = 0.2f;
-    void Start()
-    {
-        
-    }
-    void Update()
-    {
-        
-    }
     void OnDrawGizmos()
     {
-        // Draw a gizmo for the ground check in the editor
+        // Draw a gizmo for the shimmy check in the editor
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(rightCheckPoint.position, pointRadi);
         Gizmos.color = Color.blue;
@@ -25,7 +17,8 @@ public class ShimmyBarCode : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        
+        if (collision.gameObject.tag == "PlayerHand")
         {
             PlayerMovementAndAC playerMove = collision.gameObject.GetComponent<PlayerMovementAndAC>();
             playerMove.leftCheckPointPos = leftCheckPoint;
