@@ -161,7 +161,7 @@ public class PlayerMovementAndAC : MonoBehaviour
             if (moveActionReference.action.ReadValue<Vector2>().y < -0.8)
             {
                 ran1 = false;
-                barGrabIFrames = 0.2f;
+                barGrabIFrames = 0.3f;
                 Debug.Log("Player droped off bar");
                 anim.SetTrigger("LetGoOfBar"); //for player animation functionalty
             }
