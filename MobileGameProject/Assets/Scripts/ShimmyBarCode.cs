@@ -17,7 +17,7 @@ public class ShimmyBarCode : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        //Sends bar L & R point position to player movement script   
         if (collision.gameObject.tag == "Player")
         {
             PlayerMovementAndAC playerMove = collision.gameObject.GetComponent<PlayerMovementAndAC>();
