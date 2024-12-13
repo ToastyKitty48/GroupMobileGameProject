@@ -44,7 +44,7 @@ SpriteShapeRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -78,13 +78,13 @@ SpriteShapeRenderer:
   m_SortingOrder: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_MaskInteraction: 0
-  m_ShapeTexture: {fileID: 2800000, guid: 8138014680159cf4db8dd97fdb9c07b7, type: 3}
+  m_ShapeTexture: {fileID: 2800000, guid: 6ea4781da87aede40956245268494429, type: 3}
   m_Sprites:
-  - {fileID: 1197681541, guid: b836709d6ed7c044b96ea5f5ef3c9055, type: 3}
-  - {fileID: -1139191482, guid: b836709d6ed7c044b96ea5f5ef3c9055, type: 3}
-  - {fileID: 1560813436, guid: b836709d6ed7c044b96ea5f5ef3c9055, type: 3}
-  - {fileID: -524278781, guid: b836709d6ed7c044b96ea5f5ef3c9055, type: 3}
-  - {fileID: -297701356, guid: b836709d6ed7c044b96ea5f5ef3c9055, type: 3}
+  - {fileID: -1641630030, guid: 17cf5d710e37d7749a144c5702aa7ff9, type: 3}
+  - {fileID: 2085391467, guid: 17cf5d710e37d7749a144c5702aa7ff9, type: 3}
+  - {fileID: -750347069, guid: 17cf5d710e37d7749a144c5702aa7ff9, type: 3}
+  - {fileID: -1730255682, guid: 17cf5d710e37d7749a144c5702aa7ff9, type: 3}
+  - {fileID: -722812359, guid: 17cf5d710e37d7749a144c5702aa7ff9, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
   - {fileID: 1197681541, guid: b836709d6ed7c044b96ea5f5ef3c9055, type: 3}
   - {fileID: 21300000, guid: 608e61deb05c54660bebf5a4dd2ee02d, type: 3}
