@@ -122,7 +122,7 @@ public class PlayerMovementAndAC : MonoBehaviour
             Debug.Log("Let go of bar");
             anim.SetTrigger("LetGoOfBar");
         }
-        if (touchingBar && barGrabIFrames <= 0)
+        if (touchingBar && barGrabIFrames <= 0 && !isGrounded)
         {
 
             float handPos = handCheckPoint.localPosition.y;
