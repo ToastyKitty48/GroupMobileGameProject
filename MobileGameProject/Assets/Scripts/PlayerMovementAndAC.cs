@@ -202,7 +202,7 @@ public class PlayerMovementAndAC : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        // Draw a gizmo for the ground check in the editor
+        // Draw a gizmo for the editor veiw
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheckPoint.position, groundCheckRadius);
         Gizmos.color = Color.blue;
