@@ -5,32 +5,36 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    Canvas pauseCan; // Pause menu UI canvas
+    Canvas gameUICan; //Player UI canvas
     void Start()
     {
-        GetComponent<Canvas>().enabled = false;
+        //gets canvases of the pause menu & game UI
+        pauseCan = GameObject.FindGameObjectWithTag("PauseCanvas").GetComponent<Canvas>();
+        gameUICan = GameObject.FindGameObjectWithTag("GameUICanvas").GetComponent<Canvas>();
+        pauseCan.enabled = false; //Turns off pause menu canvas at start
     }
-    void Update()
+    //Pauses the game
+    public void Pause()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && Time.timeScale == 1)
-        {
-            GetComponent<Canvas>().enabled = true;
-            Time.timeScale = 0;
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape) && Time.timeScale == 0)
-        {
-            Resume();
-        }
+        pauseCan.enabled = true;
+        gameUICan.enabled = false;
+        Time.timeScale = 0;
     }
+    //Resumes the game
     public void Resume()
     {
-        GetComponent<Canvas>().enabled = false;
+        pauseCan.enabled = false;
+        gameUICan.enabled = true;
         Time.timeScale = 1;
     }
+    //Restarts curent level
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Time.timeScale = 1;
     }
+    //Quits game
     public void QuitGame()
     {
         Application.Quit();
