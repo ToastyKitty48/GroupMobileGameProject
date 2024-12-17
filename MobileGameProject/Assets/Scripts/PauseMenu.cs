@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
         pauseCan = GameObject.FindGameObjectWithTag("PauseCanvas").GetComponent<Canvas>();
         gameUICan = GameObject.FindGameObjectWithTag("GameUICanvas").GetComponent<Canvas>();
         pauseCan.enabled = false; //Turns off pause menu canvas at start
+        gameUICan.enabled = true; //Turns on player UI canvas at start
     }
     //Pauses the game
     public void Pause()
