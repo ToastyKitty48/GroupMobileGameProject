@@ -5,19 +5,17 @@ using UnityEngine;
 public class WinFlagCode : MonoBehaviour
 
 {
-    [SerializeField] private float hitboxSizeX = 0.5f;
-    [SerializeField] private float hitboxSizeY = 0.5f;
+    Canvas LevelCompleteCan;
     void Start()
     {
-        
+        LevelCompleteCan = GameObject.FindGameObjectWithTag("LevelCompleteCanvas").GetComponent<Canvas>();
     }
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, new Vector3 (hitboxSizeX, hitboxSizeY, 0));
+        if (collision.tag == "Player")
+        {
+            LevelCompleteCan.enabled = true;
+            Time.timeScale = 0;
+        }
     }
 }
