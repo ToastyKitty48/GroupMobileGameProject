@@ -10,6 +10,7 @@ public class PlayerMovementAndAC : MonoBehaviour
     [SerializeField] private float shimmySpeed = 0.04f; //Speed for horizontal movement on shimmy bar
     [SerializeField] private float fallGravMulti = 2f;
     [SerializeField] InputActionReference moveActionReference;
+    [SerializeField] InputActionReference jumpActionReference;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheckPoint; // Transform for ground check position
@@ -40,7 +41,7 @@ public class PlayerMovementAndAC : MonoBehaviour
     Animator anim; //for player animator controller
     Vector3 lastPosition; //for player animation functionalty
     SpriteRenderer Spr; //for player animation functionalty
-
+    private float jumping = 0;
     //everything that is used for the player animation will be marked with "for player animation functionalty"
     void Awake()
     {
@@ -50,7 +51,6 @@ public class PlayerMovementAndAC : MonoBehaviour
         lastPosition = transform.position; //for player animation functionalty
         Spr = GetComponent<SpriteRenderer>();
     }
-
     void FixedUpdate()
     {
         // Check if the player is grounded
